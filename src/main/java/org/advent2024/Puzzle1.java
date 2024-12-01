@@ -1,10 +1,9 @@
-package org.example;
+package org.advent2024;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Dictionary;
 import java.util.List;
 
 import static java.lang.System.exit;

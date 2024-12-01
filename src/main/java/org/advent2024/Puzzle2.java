@@ -1,10 +1,10 @@
-package org.example;
+package org.advent2024;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static org.example.Puzzle1.readListsFromFile;
+import static org.advent2024.Puzzle1.readListsFromFile;
 
 public class Puzzle2 {
 
