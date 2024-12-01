@@ -34,7 +34,6 @@ public class Puzzle1 {
         List<Integer> list1 = puzzleInput.get(0).stream().sorted().toList();
         List<Integer> list2 = puzzleInput.get(1).stream().sorted().toList();
         Integer answer = 0;
-        System.out.println(list1.size());
         for (int i = 0; i < list1.size(); i++) {
             Integer difference = list2.get(i) - list1.get(i);
             if (difference < 0) {
