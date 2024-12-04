@@ -8,7 +8,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import static java.lang.System.clearProperty;
 import static java.lang.System.exit;
 
 public class Puzzle7 {
@@ -41,12 +40,13 @@ public class Puzzle7 {
                 if (Objects.equals(map.get(y).get(x), "X")) {
                     answer += findHorizontal(map,x,y);
                     answer += findVertical(map,x,y);
-                    answer += findDiagonal(map,x,y);
+                    answer += findDiagonal(map,x,y, "XMAS");
                 }
             }
         }
         System.out.println(answer);
     }
+
     public static int findVertical(List<List<String>> map, int x, int y) {
         int count = 0;
         String searchable = "XMAS";
@@ -62,7 +62,7 @@ public class Puzzle7 {
                 }
 
             } catch (IndexOutOfBoundsException e) {
-                // It's ok to do nothing here.
+                break;
             }
         }
         for (int i = 0; i < searchable.length(); i++) {
@@ -77,7 +77,7 @@ public class Puzzle7 {
                 }
 
             } catch (IndexOutOfBoundsException e) {
-                // It's ok to do nothing here.
+                break;
             }
         }
         return count;
@@ -97,7 +97,7 @@ public class Puzzle7 {
                 }
 
             } catch (IndexOutOfBoundsException e) {
-                // It's ok to do nothing here.
+                break;
             }
         }
         for (int i = 0; i < searchable.length(); i++) {
@@ -111,18 +111,18 @@ public class Puzzle7 {
                 }
 
             } catch (IndexOutOfBoundsException e) {
-                // It's ok to do nothing here.
+                break;
             }
         }
         return count;
     }
-    public static int findDiagonal(List<List<String>> map, int x, int y) {
+    public static int findDiagonal(List<List<String>> map, int x, int y, String searchable) {
         int count = 0;
-        String searchable = "XMAS";
         for (int i = 0; i < searchable.length(); i++) {
             try {
                 if (Objects.equals(map.get(y - i).get(x + i), String.valueOf(searchable.toCharArray()[i]))) {
                     if (i == searchable.length() -1) {
+
                         count++;
                     }
                 } else {
@@ -130,7 +130,7 @@ public class Puzzle7 {
                 }
 
             } catch (IndexOutOfBoundsException e) {
-                // It's ok to do nothing here.
+                break;
             }
         }
         for (int i = 0; i < searchable.length(); i++) {
@@ -144,7 +144,7 @@ public class Puzzle7 {
                 }
 
             } catch (IndexOutOfBoundsException e) {
-                // It's ok to do nothing here.
+                break;
             }
         }
         for (int i = 0; i < searchable.length(); i++) {
@@ -158,7 +158,7 @@ public class Puzzle7 {
                 }
 
             } catch (IndexOutOfBoundsException e) {
-                // It's ok to do nothing here.
+                break;
             }
         }
         for (int i = 0; i < searchable.length(); i++) {
@@ -172,7 +172,7 @@ public class Puzzle7 {
                 }
 
             } catch (IndexOutOfBoundsException e) {
-                // It's ok to do nothing here.
+                break;
             }
         }
 

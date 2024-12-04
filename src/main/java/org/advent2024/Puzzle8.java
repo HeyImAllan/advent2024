@@ -8,7 +8,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import static java.lang.System.clearProperty;
 import static java.lang.System.exit;
 
 public class Puzzle8 {
@@ -73,7 +72,7 @@ public class Puzzle8 {
                 }
 
             } catch (IndexOutOfBoundsException e) {
-                // It's ok to do nothing here.
+                break;
             }
         }
         for (int i = 0; i < searchable.length(); i++) {
@@ -88,7 +87,7 @@ public class Puzzle8 {
                 }
 
             } catch (IndexOutOfBoundsException e) {
-                // It's ok to do nothing here.
+                break;
             }
         }
         return count;
@@ -108,7 +107,7 @@ public class Puzzle8 {
                 }
 
             } catch (IndexOutOfBoundsException e) {
-                // It's ok to do nothing here.
+                break;
             }
         }
         for (int i = 0; i < searchable.length(); i++) {
@@ -122,7 +121,7 @@ public class Puzzle8 {
                 }
 
             } catch (IndexOutOfBoundsException e) {
-                // It's ok to do nothing here.
+                break;
             }
         }
         return count;
@@ -134,7 +133,6 @@ public class Puzzle8 {
                 // GOES NE
                 if (Objects.equals(map.get(y - i + 1).get(x + i - 1), String.valueOf(searchable.toCharArray()[i]))) {
                     if (i == searchable.length() -1) {
-                        System.out.println("FOUND NE");
                         count++;
                     }
                 } else {
@@ -150,7 +148,6 @@ public class Puzzle8 {
                 // GOES NW
                 if (Objects.equals(map.get(y - i + 1).get(x - i + 1 ), String.valueOf(searchable.toCharArray()[i]))) {
                     if (i == searchable.length() -1) {
-                        System.out.println("FOUND NW");
                         count++;
                     }
                 } else {
@@ -166,7 +163,6 @@ public class Puzzle8 {
                 // GOES SE
                 if (Objects.equals(map.get(y + i - 1).get(x + i - 1), String.valueOf(searchable.toCharArray()[i]))) {
                     if (i == searchable.length() -1) {
-                        System.out.println("FOUND SE");
                         count++;
                     }
                 } else {
@@ -175,7 +171,6 @@ public class Puzzle8 {
 
             } catch (IndexOutOfBoundsException e) {
                 break;
-                // It's ok to do nothing here.
             }
         }
         for (int i = 0; i < searchable.length(); i++) {
@@ -183,7 +178,6 @@ public class Puzzle8 {
                 // GOES SW
                 if (Objects.equals(map.get(y + i - 1).get(x - i + 1), String.valueOf(searchable.toCharArray()[i]))) {
                     if (i == searchable.length() -1) {
-                        System.out.println("FOUND SW");
                         count++;
                     }
                 } else {
@@ -192,7 +186,6 @@ public class Puzzle8 {
 
             } catch (IndexOutOfBoundsException e) {
                 break;
-                // It's ok to do nothing here.
             }
         }
 
@@ -213,7 +206,6 @@ public class Puzzle8 {
 
             } catch (IndexOutOfBoundsException e) {
                 break;
-                // It's ok to do nothing here.
             }
         }
         for (int i = 0; i < searchable.length(); i++) {
@@ -228,7 +220,6 @@ public class Puzzle8 {
 
             } catch (IndexOutOfBoundsException e) {
                 break;
-                // It's ok to do nothing here.
             }
         }
         for (int i = 0; i < searchable.length(); i++) {
@@ -243,7 +234,6 @@ public class Puzzle8 {
 
             } catch (IndexOutOfBoundsException e) {
                 break;
-                // It's ok to do nothing here.
             }
         }
         for (int i = 0; i < searchable.length(); i++) {
@@ -257,7 +247,7 @@ public class Puzzle8 {
                 }
 
             } catch (IndexOutOfBoundsException e) {
-                // It's ok to do nothing here.
+                break;
             }
         }
 
