@@ -1,11 +1,11 @@
-package org.advent2024;
+package org.advent2024.day7;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.advent2024.Puzzle12.readFromFile;
+import static org.advent2024.day6.Puzzle12.readFromFile;
 
-public class Puzzle13 {
+public class Puzzle14 {
     private static final String[] OPERATORS = {"+", "*", "||"};
     static long total = 0L;
 
@@ -93,8 +93,11 @@ public class Puzzle13 {
                 result -= Long.parseLong(tokens[i + 1]);
             } else if (tokens[i].equals("*")) {
                 result *= Long.parseLong(tokens[i + 1]);
+            } else if (tokens[i].equals("||")) {
+                Long right = Long.valueOf(String.format("%s", tokens[i + 1]));
+                result = Long.valueOf(String.format("%s%s", result, right));
             }
         }
         return result;
-        }
     }
+}

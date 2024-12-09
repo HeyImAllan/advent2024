@@ -1,4 +1,4 @@
-package org.advent2024;
+package org.advent2024.day2;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

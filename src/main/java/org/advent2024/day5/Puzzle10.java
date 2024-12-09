@@ -1,4 +1,6 @@
-package org.advent2024;
+package org.advent2024.day5;
+
+import org.advent2024.day3.Puzzle5;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -1,5 +1,10 @@
 package org.advent2024;
 
+import org.advent2024.day1.Puzzle1;
+import org.advent2024.day1.Puzzle2;
+import org.advent2024.day2.Puzzle3;
+import org.advent2024.day2.Puzzle4;
+
 public class Main {
     public static void main(String[] args) {
         //puzzle1();

@@ -1,4 +1,4 @@
-package org.advent2024;
+package org.advent2024.day4;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -10,7 +10,7 @@ import java.util.Objects;
 
 import static java.lang.System.exit;
 
-public class Puzzle7 {
+public class Puzzle8 {
     public static List<String> readFromFile(String fileName) {
         List<String> list = new ArrayList<>();
 
@@ -35,6 +35,7 @@ public class Puzzle7 {
             map.add(Arrays.asList(list.get(i).split("")));
         }
         int answer = 0;
+        int masanswer = 0;
         for (int y = 0; y < map.size(); y++) {
             for (int x = 0; x < map.get(y).size(); x++) {
                 if (Objects.equals(map.get(y).get(x), "X")) {
@@ -42,9 +43,18 @@ public class Puzzle7 {
                     answer += findVertical(map,x,y);
                     answer += findDiagonal(map,x,y, "XMAS");
                 }
+                if (Objects.equals(map.get(y).get(x), "A")) {
+                    int mascount = findStar(map,x,y, "MAS");
+                    if (mascount == 2) {
+                        System.out.println("HO HO HO MAS at X: " + (x+1) + " Y: " + (y+1));
+
+                        masanswer++;
+                    }
+                }
             }
         }
         System.out.println(answer);
+        System.out.println(masanswer);
     }
 
     public static int findVertical(List<List<String>> map, int x, int y) {
@@ -114,6 +124,71 @@ public class Puzzle7 {
                 break;
             }
         }
+        return count;
+    }
+    public static int findStar(List<List<String>> map, int x, int y, String searchable) {
+        int count = 0;
+        for (int i = 0; i < searchable.length(); i++) {
+            try {
+                // GOES NE
+                if (Objects.equals(map.get(y - i + 1).get(x + i - 1), String.valueOf(searchable.toCharArray()[i]))) {
+                    if (i == searchable.length() -1) {
+                        count++;
+                    }
+                } else {
+                    break;
+                }
+
+            } catch (IndexOutOfBoundsException e) {
+                break;
+            }
+        }
+        for (int i = 0; i < searchable.length(); i++) {
+            try {
+                // GOES NW
+                if (Objects.equals(map.get(y - i + 1).get(x - i + 1 ), String.valueOf(searchable.toCharArray()[i]))) {
+                    if (i == searchable.length() -1) {
+                        count++;
+                    }
+                } else {
+                    break;
+                }
+
+            } catch (IndexOutOfBoundsException e) {
+                break;
+            }
+        }
+        for (int i = 0; i < searchable.length(); i++) {
+            try {
+                // GOES SE
+                if (Objects.equals(map.get(y + i - 1).get(x + i - 1), String.valueOf(searchable.toCharArray()[i]))) {
+                    if (i == searchable.length() -1) {
+                        count++;
+                    }
+                } else {
+                    break;
+                }
+
+            } catch (IndexOutOfBoundsException e) {
+                break;
+            }
+        }
+        for (int i = 0; i < searchable.length(); i++) {
+            try {
+                // GOES SW
+                if (Objects.equals(map.get(y + i - 1).get(x - i + 1), String.valueOf(searchable.toCharArray()[i]))) {
+                    if (i == searchable.length() -1) {
+                        count++;
+                    }
+                } else {
+                    break;
+                }
+
+            } catch (IndexOutOfBoundsException e) {
+                break;
+            }
+        }
+
         return count;
     }
     public static int findDiagonal(List<List<String>> map, int x, int y, String searchable) {

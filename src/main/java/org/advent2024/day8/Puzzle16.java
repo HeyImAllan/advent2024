@@ -1,11 +1,11 @@
-package org.advent2024;
+package org.advent2024.day8;
 
 import java.util.*;
 
-import static org.advent2024.Puzzle12.readFromFile;
+import static org.advent2024.day6.Puzzle12.readFromFile;
 
 
-public class Puzzle15 {
+public class Puzzle16 {
     public static List<List<String>> map = new ArrayList<>();
     static List<List<Integer>> allAntiNodes = new ArrayList<>();
 
@@ -36,28 +36,59 @@ public class Puzzle15 {
                 distance.add(Math.abs(coordinates.get(i).get(1) - coordinates.get(j).get(1)));
                 List<Integer> antiNode1 = new ArrayList<>();
                 List<Integer> antiNode2 = new ArrayList<>();
-                //System.out.println("Distance: " + distance);
+                List<Integer> antenna1 = new ArrayList<>();
+                antenna1.add(coordinates.get(i).get(0));
+                antenna1.add(coordinates.get(i).get(1));
+                List<Integer> antenna2 = new ArrayList<>();
+                antenna2.add(coordinates.get(j).get(0));
+                antenna2.add(coordinates.get(j).get(1));
+
+                if (isValidNode(antenna1)) {
+                    allAntiNodes.add(antenna1);
+                    antiNodes.add(antenna1);
+                }
+                if (isValidNode(antenna2)) {
+                    allAntiNodes.add(antenna2);
+                    antiNodes.add(antenna2);
+                }
                 antiNode1.add(coordinates.get(i).get(0) - distance.get(0));
-                antiNode2.add(coordinates.get(j).get(0) + distance.get(0));
                 if (coordinates.get(i).get(1) > coordinates.get(j).get(1)) {
                     antiNode1.add(coordinates.get(i).get(1) + distance.get(1));
-                    antiNode2.add(coordinates.get(j).get(1) - distance.get(1));
                 } else {
                     antiNode1.add(coordinates.get(i).get(1) - distance.get(1));
-                    antiNode2.add(coordinates.get(j).get(1) + distance.get(1));
                 }
-
-                if (isValidNode(antiNode1)) {
-                    //System.out.println("AntiNode1: " + antiNode1);
-                    antiNodes.add(antiNode1);
-                    allAntiNodes.add(antiNode1);
+                while(!outOfBounds(antiNode1)) {
+                    if (isValidNode(antiNode1)) {
+                        List<Integer> antiNode = new ArrayList<>(antiNode1);
+                        antiNodes.add(antiNode);
+                        allAntiNodes.add(antiNode);
+                    }
+                    antiNode1.set(0, antiNode1.get(0) - distance.get(0));
+                    if (coordinates.get(i).get(1) > coordinates.get(j).get(1)) {
+                        antiNode1.set(1, antiNode1.get(1) + distance.get(1));
+                    } else {
+                        antiNode1.set(1, antiNode1.get(1) - distance.get(1));
+                    }
                 }
-                if (isValidNode(antiNode2)) {
-                    //System.out.println("AntiNode2: " + antiNode2);
-                    antiNodes.add(antiNode2);
-                    allAntiNodes.add(antiNode2);
+                antiNode2.add(coordinates.get(i).get(0) + distance.get(0));
+                if (coordinates.get(i).get(1) > coordinates.get(j).get(1)) {
+                    antiNode2.add(coordinates.get(i).get(1) - distance.get(1));
+                } else {
+                    antiNode2.add(coordinates.get(i).get(1) + distance.get(1));
                 }
-
+                while(!outOfBounds(antiNode2)) {
+                    if (isValidNode(antiNode2)) {
+                        List<Integer> antiNode = new ArrayList<>(antiNode2);
+                        antiNodes.add(antiNode);
+                        allAntiNodes.add(antiNode);
+                    }
+                    antiNode2.set(0, antiNode2.get(0) + distance.get(0));
+                    if (coordinates.get(i).get(1) > coordinates.get(j).get(1)) {
+                        antiNode2.set(1, antiNode2.get(1) - distance.get(1));
+                    } else {
+                        antiNode2.set(1, antiNode2.get(1) + distance.get(1));
+                    }
+                }
             }
         }
         return antiNodes;
@@ -89,8 +120,8 @@ public class Puzzle15 {
     }
 
     public static boolean outOfBounds(List<Integer> coordinate) {
-                return coordinate.get(0) < 0 || coordinate.get(0) >= map.size() ||
-                    coordinate.get(1) < 0 || coordinate.get(1) >= map.get(coordinate.get(0)).size() ;
+        return coordinate.get(0) < 0 || coordinate.get(0) >= map.size() ||
+                coordinate.get(1) < 0 || coordinate.get(1) >= map.get(coordinate.get(0)).size() ;
     }
 
     private static List<String> getUniqueChars(List<List<String>> map) {
