@@ -48,35 +48,33 @@ public class Puzzle18 {
         for (int i = disk.size()-1; i>0; i--) {
             if (disk.get(i) != null) {
                 int initialValue = disk.get(i);
-                StringBuilder sb = new StringBuilder();
-                int counter = 0;
+                int valueLength = 0;
                 int j = i;
                 while(disk.get(j) != null && disk.get(j) == initialValue && j > 0) {
-                    sb.append(disk.get(i));
                     j--;
-                    counter++;
+                    valueLength++;
                 }
+                // If I don't do anything with this value, it'll loop.
                 i = i - Math.abs(i - j) +1;
                 for (int k = 0; k < compressed.size(); k++) {
+                    // I don't want to look for null space to the right of the compacted value.
                     if (k >= i ) {
                         break;
                     }
                     if (compressed.get(k) == null) {
-                        int emptyspace = 0;
+                        int nullSpaceLength = 0;
                         while(compressed.get(k) == null ) {
-                            emptyspace++;
+                            nullSpaceLength++;
                             k++;
                             if ( k >= compressed.size()) {
                                 break;
                             }
                         }
-                        if (counter <= emptyspace) {
-                            for (int l = 0; l < counter; l++) {
-                                compressed.set(k - emptyspace + l, initialValue);
+                        if (valueLength <= nullSpaceLength) {
+                            for (int l = 0; l < valueLength; l++) {
+                                compressed.set(k - nullSpaceLength + l, initialValue);
                                 compressed.set(i + l, null);
-
                             }
-                            //printDisk(compressed);
                             break;
                         }
                     }
