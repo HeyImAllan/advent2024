@@ -64,22 +64,13 @@ public class Puzzle20 {
     }
 
     private static List<List<Integer>> getNeighbors(List<Integer> lastlocation) {
-        List<List<Integer>> neighbors = new ArrayList<>();
-        List<Integer> up = new ArrayList<>();
-        up.add(lastlocation.get(0)-1);
-        up.add(lastlocation.get(1));
-        List<Integer> down = new ArrayList<>();
-        down.add(lastlocation.get(0)+1);
-        down.add(lastlocation.get(1));
-        List<Integer> left = new ArrayList<>();
-        left.add(lastlocation.get(0));
-        left.add(lastlocation.get(1)-1);
-        List<Integer> right = new ArrayList<>();
-        right.add(lastlocation.get(0));
-        right.add(lastlocation.get(1)+1);
-        neighbors.addAll(List.of(up, down, left, right));
-        return neighbors;
-
+        int x = lastlocation.get(0), y = lastlocation.get(1);
+        return new ArrayList<>(List.of(
+                List.of(x - 1, y),
+                List.of(x + 1, y),
+                List.of(x, y - 1),
+                List.of(x, y + 1)
+        ));
     }
 
     public static List<List<Integer>> getCoordinates(String uniqueChar) {
