@@ -104,7 +104,7 @@ public class Puzzle16 {
         return false;
     }
 
-    private static List<List<Integer>> getCoordinates(String uniqueChar) {
+    public static List<List<Integer>> getCoordinates(String uniqueChar) {
         List<List<Integer>> coordinates = new ArrayList<>();
         for (int i = 0; i < map.size(); i++) {
             for (int j = 0; j < map.get(i).size(); j++) {
@@ -138,14 +138,14 @@ public class Puzzle16 {
     }
 
 
-    private static List<List<String>> buildmap(List<String> input) {
+    public static List<List<String>> buildmap(List<String> input) {
         List<List<String>> map = new ArrayList<>();
         for (String line : input) {
             map.add(List.of(line.split("")));
         }
         return map;
     }
-    private static void printMap(List<List<String>> map){
+    public static void printMap(List<List<String>> map){
         for (int i = 0; i < map.size() ; i++) {
             for (int j = 0; j < map.get(i).size() ; j++) {
                 System.out.print(map.get(i).get(j));
