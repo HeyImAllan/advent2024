@@ -41,13 +41,13 @@ public class Puzzle20 {
     }
 
     public static void traverse(List<List<Integer>> path) {
-        List<Integer> lastlocation = path.get(path.size() - 1);
+        List<Integer> lastlocation = path.getLast();
         Integer currentValue = Integer.valueOf(getFromMap(lastlocation.get(0), lastlocation.get(1)));
         List<List<Integer>> neighbors = getNeighbors(lastlocation);
         for (List<Integer> neighbor : neighbors) {
             if (!outOfBounds(neighbor) && Integer.valueOf(getFromMap(neighbor.get(0), neighbor.get(1))) == currentValue + 1) {
                 if (currentValue + 1 == 9) {
-                    updateScore(path.get(0), neighbor);
+                    updateScore(path.getFirst(), neighbor);
 
                 }
                 List<List<Integer>> newPath = new ArrayList<>(path);
