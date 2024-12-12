@@ -22,7 +22,7 @@ public class Puzzle22 {
 
         long answer = 0;
         for (Long element: puzzle) {
-            answer += blink(element, 75);
+            answer += blink(element, 1500);
         }
         System.out.println(answer);
         long endTime   = System.currentTimeMillis();
