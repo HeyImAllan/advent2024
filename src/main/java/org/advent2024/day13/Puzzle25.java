@@ -73,19 +73,28 @@ public class Puzzle25 {
                 // a * x1 + b * x2 = p1
                 // a * y1 + b * y2 = p2
 
-                // a * x1 * y2 + b * x2 * y2 = p1 * y2
-                // a * x2 * y1 + b * x2 * y2 = x2 * p2
+                // determine a
+                // a * x1 * y2 + (b * x2 * y2) = p1 * y2
+                // a * y1 * x2 + (b * y2 * x2) = x2 * p2
 
                 // a * x1 * y2 - a * x2 * y1 = p1 * y2 - x2 * p2
                 // a = (p1 * y2 - x2 * p2) / (x1 * y2 - x2 * y1)
+
+                // determina b
+                // (a * x1 * y1) + b * x2 * y1 = p1 * y1
+                // (a * y1 * x1) + b * y2 * x1 = p2 * x1
+
+                // b * x2 * y1 - b * y2 * x1 = p1 * y1 - p2 * x1
+                // b * (x2 * y1 - y2 * x1) = (p1 * y1 - p2 * x1)
+                // b = (p1 * y1 - p2 * x1) / (x2 * y1 - x1 * y2)
 
                 // Simplified:
                 // a * 3 + b * 2 = 8
                 // a * 4 + b * 6 = 14
 
                 // If we want to know a, we eliminate b by cancelling it out for both equations:
-                // a * 3 * 6 + b * 2 * 6 = 8 * 6
-                // a * 4 * 2 + b * 6 * 2 = 14 * 2
+                // a * 3 * 6 + (b * 2 * 6) = 8 * 6
+                // a * 4 * 2 + (b * 6 * 2) = 14 * 2
 
                 // Now we can eliminate B:
                 // a * 3 * 6 = 8 * 6
@@ -93,7 +102,8 @@ public class Puzzle25 {
 
                 // And because both calculations are equally solving for a.
                 // a * 3 * 6 - a * 4 * 2 = 8 * 6 - 14 * 2
-                // a * (3 * 6 - a * 4 * 2) = (8 * 6 - 14 * 2)
+                // simplify a(x * x) - a(x* x) = a (x * x - x * x)
+                // a * (3 * 6 - 4 * 2) = (8 * 6 - 14 * 2)
                 // a = (8 * 6 - 14 * 2) / (3 * 6 - 4 * 2)
 
                 // And solve:
