@@ -30,19 +30,38 @@ public class Puzzle24 {
                 }
             }
         }
+        for (String direction: directions) {
+            directionsSeen.putIfAbsent(direction, new ArrayList<>());
+        }
         int answerp2 = 0;
         for (List<Point> region : regions.values()) {
             int regionSides = 0;
             for (Point point : region) {
-
                 for (String direction: directions) {
-                    System.out.println("Checking direction" + direction + " for " + point + " letter " + getFromMap(point));
-                    directionsSeen.putIfAbsent(direction, new ArrayList<>());
-                    if (!directionsSeen.get(direction).contains(point)) {
-                        if (antiTraverse(point.x, point.y, direction).size() != 0) {
-                            System.out.println("Adding direction " + direction + " for " + point + " letter " + getFromMap(point));
-                            regionSides += 1;
+                    Point oldPoint = point;
+                    while (!directionsSeen.get(direction).contains(oldPoint)) {
+                        //System.out.println("Checking direction" + direction + " for " + point + " letter " + getFromMap(point));
+                        for (Point p : region) {
+                            // get furthest point on the left.
+                            if (direction.equals("NORTH") || direction.equals("SOUTH")) {
+                                if (p.getX() == point.getX() && p.getY() < point.getY() && !directionsSeen.get(direction).contains(p)) {
+                                    point = p;
+                                }
+                            }
+                            if (direction.equals("EAST") || direction.equals("WEST")) {
+                                if (p.getY() == point.getY() && p.getX() < point.getX() && !directionsSeen.get(direction).contains(p)) {
+                                    point = p;
+                                }
+                            }
                         }
+
+                        if (!directionsSeen.get(direction).contains(point)) {
+                            if (!antiTraverse(point.x, point.y, direction).isEmpty()) {
+                                System.out.println("Adding direction " + direction + " for " + point + " letter " + getFromMap(point));
+                                regionSides += 1;
+                            }
+                        }
+                        point = oldPoint;
                     }
                 }
             }
@@ -118,6 +137,7 @@ public class Puzzle24 {
     }
     private static void antiExplore(Point current, List<Point> antiRegion, String direction) {
         String s = getFromMap(current);
+        int antiRegionSize = antiRegion.size();
         Point neighbor = getNeighborByDirection(current, direction);
         Point next = getNextPositionByDirection(current, direction);
         if (outOfBounds(neighbor) &&
@@ -129,7 +149,7 @@ public class Puzzle24 {
             }
         directionsSeen.get(direction).add(current);
 
-        if (!outOfBounds(next) && getFromMap(next).equals(s) && !antiRegion.isEmpty()) {
+        if (!outOfBounds(next) && getFromMap(next).equals(s) && (antiRegion.size() != antiRegionSize)) {
             antiExplore(next, antiRegion, direction);
         }
     }
