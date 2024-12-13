@@ -74,10 +74,32 @@ public class Puzzle25 {
                 // a * y1 + b * y2 = p2
 
                 // a * x1 * y2 + b * x2 * y2 = p1 * y2
-                // a * x2 * y1 + b * x2 * y2 = x2 * y3
+                // a * x2 * y1 + b * x2 * y2 = x2 * p2
 
-                // a * x1 * y2 - a * x2 * y1 = x3 * y2 - x2 * y3
+                // a * x1 * y2 - a * x2 * y1 = p1 * y2 - x2 * p2
                 // a = (p1 * y2 - x2 * p2) / (x1 * y2 - x2 * y1)
+
+                // Simplified:
+                // a * 3 + b * 2 = 8
+                // a * 4 + b * 6 = 14
+
+                // If we want to know a, we eliminate b by cancelling it out for both equations:
+                // a * 3 * 6 + b * 2 * 6 = 8 * 6
+                // a * 4 * 2 + b * 6 * 2 = 14 * 2
+
+                // Now we can eliminate B:
+                // a * 3 * 6 = 8 * 6
+                // a * 4 * 2 = 14 * 2
+
+                // And because both calculations are equally solving for a.
+                // a * 3 * 6 - a * 4 * 2 = 8 * 6 - 14 * 2
+                // a * (3 * 6 - a * 4 * 2) = (8 * 6 - 14 * 2)
+                // a = (8 * 6 - 14 * 2) / (3 * 6 - 4 * 2)
+
+                // And solve:
+                // a = 20 / 10
+                // a = 2
+
 
                 double a = (p1*y2 - p2*x2) / (x1*y2 - y1*x2);
                 double b = (p2*x1 - p1*y1) / (x1*y2 - y1*x2);
