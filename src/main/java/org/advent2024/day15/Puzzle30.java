@@ -97,7 +97,6 @@ public class Puzzle30 {
                 if (getFromMap(nextPoint, warehouseMap).equals(".")) {
                     updateMap(currentPos, ".");
                     updateMap(nextPoint, "@");
-                    currentPos = nextPoint;
                     printMap(warehouseMap);
                 }
             } else {
