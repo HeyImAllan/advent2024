@@ -153,11 +153,6 @@ public class Puzzle32 {
                 return 0;
             }
             nextPoint = new Point(nextPoint.x + directions.get(instruction).x, nextPoint.y + directions.get(instruction).y);
-//            if (i == distanceBetweenPoints - 1) {
-//                if (!outOfBounds(nextPoint) && Objects.equals(getFromMap(nextPoint), ".")) {
-//                    return (int) distanceBetweenPoints+1000;
-//                }
-//            }
         }
         return (int) distanceBetweenPoints + 1000;
 
