@@ -11,7 +11,7 @@ public class Puzzle32 {
     static Map<String, Point> directions = new HashMap<>();
     static List<List<String>> warehouseMap = new ArrayList<>();
     static List<Node> seenNodes =  new ArrayList<>();
-    static boolean printMap = true;
+    static boolean printMap = false;
     static List<Node> viableNodes = new ArrayList<>();
 
     public static void main(String[] args) {
@@ -23,7 +23,6 @@ public class Puzzle32 {
         List<String> input = readFromFile("src/main/resources/puzzle31/input.txt");
         List<String> rawmap = new ArrayList<>();
 
-
         for (String line : input) {
             if (line.isEmpty()) {
                 break;
@@ -31,53 +30,65 @@ public class Puzzle32 {
             rawmap.add(line);
         }
 
-
         warehouseMap = buildmap(rawmap);
         printMap(warehouseMap);
         List<Point> pointList = getAllPoints();
-        //System.out.println(getFirstCoordinatesOf("S"));
-        //ystem.out.println(getFirstCoordinatesOf("E"));
-        //System.out.println(pointList);
         Map<Point, Node> allNodes = constructBasicCorners(pointList);
         Node startNode = new Node(getFirstCoordinatesOf("S"));
         allNodes.put(getFirstCoordinatesOf("S"), startNode);
         Node endNode = new Node(getFirstCoordinatesOf("E"));
+        allNodes.remove(endNode.getLocation());
         allNodes.put(getFirstCoordinatesOf("E"), endNode);
-//        seenNodes.add(endNode);
         processNodes(allNodes, startNode);
 
-        //highLightOnMap(pointList, "O");
-//        List<Node> puzzleInput = new ArrayList<>();
-//        for (Map.Entry<Point, Node> entry: allNodes.entrySet() ) {
-//            if (!entry.getValue().getAdjacentNodes().isEmpty()) {
-//                puzzleInput.add(entry.getValue());
-//            }
-//        }
+        viableNodes.remove(viableNodes.indexOf(endNode)); //  make sure the endnode is not processed twice.
         viableNodes.add(endNode);
-        List<Node> shortestPath = calculateShortestPathFromSource(viableNodes, startNode);
-        //System.out.println(shortestPath);
-//        for (Node node : shortestPath) {
-//            highLightOnMap(node.getShortestPath().stream().map(Node::getLocation).toList(), "O");
-//        }
+        List<List<NodeDist>> graph = convertToGraph(viableNodes);
+        // get the distance of the shortest path
+        Map<Integer, Integer> result = DijkstraPqueue.ShortestPath(viableNodes.indexOf(startNode), viableNodes.size(), graph);
+        System.out.println(result.get(viableNodes.indexOf(endNode)));
 
-        List<Node> finalPath = shortestPath.getLast().getShortestPath();
-        highLightOnMap(finalPath.stream().map(Node::getLocation).toList(), "O");
-        List<Point> allpoints = new ArrayList<>();
-        List<Node> subNodes = shortestPath.getLast().getShortestPath();
-        for (Node subNode : subNodes) {
-            for (List<Node> node : subNode.getAllPaths()) {
-                allpoints.addAll(node.stream().map(Node::getLocation).toList());
+
+
+        Map<Integer, List<List<Integer>>> result2 = DijkstraPqueue.ShortestPaths(viableNodes.indexOf(startNode), viableNodes.size(), graph);
+
+        Set<Point> answer2 = new HashSet<>(Set.of());
+        for (List<Integer> path : result2.get(viableNodes.indexOf(endNode))) {
+            List<Point> points = new ArrayList<>();
+            for (Integer index : path) {
+                points.add(viableNodes.get(index).getLocation());
             }
-        }
 
-        highLightOnMap(allpoints, "8");
-        System.out.println(shortestPath.getLast().getDistance() + 1000);
+            answer2.addAll(highLightPathOnMap(points, "X"));
+        }
+        System.out.println(answer2.size());
+
         long endTime   = System.currentTimeMillis();
         long totalTime = endTime - startTime;
         System.out.println("Total runtime: " + totalTime + "ms");
 
     }
+    private static List<List<NodeDist>> convertToGraph(List<Node> nodes) {
+        Map<Point, Integer> pointToIndex = new HashMap<>();
+        for (int i = 0; i < nodes.size(); i++) {
+            pointToIndex.put(nodes.get(i).getLocation(), i);
+        }
 
+        List<List<NodeDist>> graph = new ArrayList<>(nodes.size());
+        for (int i = 0; i < nodes.size(); i++) {
+            graph.add(new ArrayList<>());
+        }
+
+        for (Node node : nodes) {
+            int nodeIndex = pointToIndex.get(node.getLocation());
+            for (Map.Entry<Node, Integer> entry : node.getAdjacentNodes().entrySet()) {
+                int adjIndex = pointToIndex.get(entry.getKey().getLocation());
+                graph.get(nodeIndex).add(new NodeDist(adjIndex, entry.getValue()));
+            }
+        }
+
+        return graph;
+    }
     private static Map<Point, Node> constructBasicCorners(List<Point> corners) {
         Map<Point, Node> allCorners = new HashMap<>();
         for (Point p : corners) {
@@ -136,14 +147,19 @@ public class Puzzle32 {
                 instruction = ">";
             }
         }
-        if (distanceBetweenPoints > 1) {
-            return 0;
+        Point nextPoint = new Point(startCorner.x + directions.get(instruction).x, startCorner.y + directions.get(instruction).y);
+        for (int i = 0; i < distanceBetweenPoints; i++) {
+            if (!outOfBounds(nextPoint) && Objects.equals(getFromMap(nextPoint), "#")) {
+                return 0;
+            }
+            nextPoint = new Point(nextPoint.x + directions.get(instruction).x, nextPoint.y + directions.get(instruction).y);
+//            if (i == distanceBetweenPoints - 1) {
+//                if (!outOfBounds(nextPoint) && Objects.equals(getFromMap(nextPoint), ".")) {
+//                    return (int) distanceBetweenPoints+1000;
+//                }
+//            }
         }
-        Point nextPoint = new Point(startCorner.x + directions.get(instruction).x, startCorner.y + directions.get(instruction).y);;
-        if (!outOfBounds(nextPoint) && Objects.equals(getFromMap(nextPoint), "#")) {
-            return 0;
-        }
-        return 1;
+        return (int) distanceBetweenPoints + 1000;
 
     }
 
@@ -165,20 +181,20 @@ public class Puzzle32 {
             }
         }
     }
-    public static void highLightOnMap(List<Point> points, String character){
-        if (printMap) {
-            for (int i = 0; i < warehouseMap.size(); i++) {
-                for (int j = 0; j < warehouseMap.get(i).size(); j++) {
-                    if (points.contains(new Point(i, j))) {
-                        System.out.print(character);
-                    } else {
-                        System.out.print(warehouseMap.get(i).get(j));
-                    }
-                }
-                System.out.print("\n");
-            }
-        }
-    }
+//    public static void highLightOnMap(List<Point> points, String character){
+//        if (printMap) {
+//            for (int i = 0; i < warehouseMap.size(); i++) {
+//                for (int j = 0; j < warehouseMap.get(i).size(); j++) {
+//                    if (points.contains(new Point(i, j))) {
+//                        System.out.print(character);
+//                    } else {
+//                        System.out.print(warehouseMap.get(i).get(j));
+//                    }
+//                }
+//                System.out.print("\n");
+//            }
+//        }
+//    }
 
 
     public static List<Point> getAllPoints() {
@@ -186,9 +202,9 @@ public class Puzzle32 {
         for (int row = 0; row < warehouseMap.size(); row++ ) {
             for (int col = 0; col < warehouseMap.getFirst().size(); col++) {
                 if (warehouseMap.get(row).get(col).equals(".")) {
-                    //if (isCorner(new Point(row,col))) {
+                    if (isCorner(new Point(row,col))) {
                         corners.add(new Point(row, col));
-                    //}
+                    }
                 }
             }
         }
@@ -230,70 +246,58 @@ public class Puzzle32 {
         }
         return coordinates;
     }
-    public static List<Node> calculateShortestPathFromSource(List<Node> graph, Node source) {
-        source.setDistance(0);
 
-        Set<Node> settledNodes = new HashSet<>();
-        Set<Node> unsettledNodes = new HashSet<>();
-
-        unsettledNodes.add(source);
-
-        while (unsettledNodes.size() != 0) {
-            Node currentNode = getLowestDistanceNode(unsettledNodes);
-            unsettledNodes.remove(currentNode);
-            for (Map.Entry<Node, Integer> adjacencyPair:
-                    currentNode.getAdjacentNodes().entrySet()) {
-                Node adjacentNode = adjacencyPair.getKey();
-                Integer edgeWeight = adjacencyPair.getValue();
-                if (!settledNodes.contains(adjacentNode)) {
-                    CalculateMinimumDistance(adjacentNode, edgeWeight, currentNode);
-                    unsettledNodes.add(adjacentNode);
+    public static Set<Point> highLightPathOnMap(List<Point> points, String character) {
+        Set<Point> allPoints = new HashSet<>(points);
+        for (int i = 0; i < points.size() - 1; i++) {
+            Point start = points.get(i);
+            Point end = points.get(i + 1);
+            allPoints.addAll(getLinePoints(start, end));
+        }
+        for (int i = 0; i < warehouseMap.size(); i++) {
+            for (int j = 0; j < warehouseMap.get(i).size(); j++) {
+                if (allPoints.contains(new Point(i, j))) {
+                    if (printMap)
+                        System.out.print(character);
+                } else {
+                    if (printMap)
+                        System.out.print(warehouseMap.get(i).get(j));
                 }
             }
-            settledNodes.add(currentNode);
+            if (printMap)
+                System.out.print("\n");
         }
-        return graph;
-    }
-    private static Node getLowestDistanceNode(Set<Node> unsettledNodes) {
-        Node lowestDistanceNode = null;
-        int lowestDistance = Integer.MAX_VALUE;
-        for (Node node: unsettledNodes) {
-            int nodeDistance = node.getDistance();
-            if (nodeDistance <= lowestDistance) {
-                lowestDistance = nodeDistance;
-                lowestDistanceNode = node;
-            }
-        }
-        return lowestDistanceNode;
-    }
-    private static void CalculateMinimumDistance(Node evaluationNode,
-                                                 Integer edgeWeight, Node sourceNode) {
-        Integer sourceDistance = sourceNode.getDistance();
-        if (!sourceNode.getShortestPath().isEmpty()) {
-            Node previousEvaluatedNode = sourceNode.getShortestPath().getLast();
-            Point oldDirection = new Point((sourceNode.getLocation().x - previousEvaluatedNode.getLocation().x), (sourceNode.getLocation().y - previousEvaluatedNode.getLocation().y));
-            Point newDirection = new Point((evaluationNode.getLocation().x - sourceNode.getLocation().x), (evaluationNode.getLocation().y - sourceNode.getLocation().y));
-            if (!oldDirection.equals(newDirection)) {
-                edgeWeight = edgeWeight + 1000;
-            }
-        }
-        LinkedList<Node> shortestPath2 = new LinkedList<>(sourceNode.getShortestPath());
-        shortestPath2.add(sourceNode);
-        highLightOnMap(shortestPath2.stream().map(Node::getLocation).toList(), "7");
-        if (sourceDistance + edgeWeight < evaluationNode.getDistance()) {
-            evaluationNode.setDistance(sourceDistance + edgeWeight);
-            LinkedList<Node> shortestPath = new LinkedList<>(sourceNode.getShortestPath());
-            shortestPath.add(sourceNode);
-            evaluationNode.setShortestPath(shortestPath);
-            evaluationNode.updateAllPaths(shortestPath);
-        }
-        if (sourceDistance + edgeWeight == evaluationNode.getDistance()) {
-            LinkedList<Node> shortestPath = new LinkedList<>(sourceNode.getShortestPath());
-            shortestPath.add(sourceNode);
-            evaluationNode.updateAllPaths(shortestPath);
-        }
+
+        return allPoints;
     }
 
+    private static List<Point> getLinePoints(Point start, Point end) {
+    List<Point> points = new ArrayList<>();
+    int x1 = start.x;
+    int y1 = start.y;
+    int x2 = end.x;
+    int y2 = end.y;
+    int dx = Math.abs(x2 - x1);
+    int dy = Math.abs(y2 - y1);
+    int sx = x1 < x2 ? 1 : -1;
+    int sy = y1 < y2 ? 1 : -1;
+    int err = dx - dy;
+
+    while (true) {
+        points.add(new Point(x1, y1));
+        if (x1 == x2 && y1 == y2) break;
+        int e2 = 2 * err;
+        if (e2 > -dy) {
+            err -= dy;
+            x1 += sx;
+        }
+        if (e2 < dx) {
+            err += dx;
+            y1 += sy;
+        }
+    }
+    return points;
+}
     private static boolean isCorner(Point point) {
         List<Point> neighborsOfPoint = getNeighbors(point);
         List<Point> corridors = new ArrayList<>();

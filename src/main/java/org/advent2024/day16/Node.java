@@ -18,15 +18,12 @@ public class Node {
         adjacentNodes.put(destination, distance);
     }
 
-    private List<List<Node>> allPaths = new ArrayList<>();
-
     public Node(Point name) {
         this.location = name;
     }
 
     public Point getLocation() { return location; }
     public List<Node> getShortestPath() { return shortestPath; }
-    public List<List<Node>> getAllPaths() {return allPaths;}
 
     public Integer getDistance() { return distance; }
 
@@ -36,9 +33,6 @@ public class Node {
 
     public void setShortestPath(List<Node> shortestPath) {
         this.shortestPath = shortestPath;
-    }
-    public void updateAllPaths(List<Node> paths) {
-        allPaths.add(paths);
     }
 
     public Map<Node, Integer> getAdjacentNodes() {
