@@ -3,10 +3,11 @@ package org.advent2024.day17;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static org.advent2024.day6.Puzzle12.readFromFile;
 
-public class Puzzle33{
+public class Puzzle34{
     private static int regA = 0;
     private static int regB = 0;
     private static int regC = 0;
@@ -16,6 +17,27 @@ public class Puzzle33{
         Computer computer = new Computer(regA, regB, regC, instructions);
         computer.execute();
         return computer.printOutput();
+    }
+
+    public static String part2() {
+        List<Integer> remainingProgram = new ArrayList<>(instructions);
+        List<Integer> program = new ArrayList<>();
+        long registerA = 0L;
+        while (!remainingProgram.isEmpty()) {
+            --registerA;
+            program.addFirst(remainingProgram.removeLast());
+            String programString = program.stream().map(Long::toString).collect(Collectors.joining(","));
+            Computer computer;
+            do {
+                ++registerA;
+                computer = new Computer(registerA, regB, regC, instructions);
+                computer.execute(true, program);
+            } while (!computer.printOutput().equals(programString));
+            if (!remainingProgram.isEmpty()) {
+                registerA = registerA << 3;
+            }
+        }
+        return Long.toString(registerA);
     }
 
     private static class Computer {
@@ -35,6 +57,10 @@ public class Puzzle33{
         }
 
         void execute() {
+            execute(false, List.of());
+        }
+
+        void execute(boolean earlyStop, List<Integer> expectedOutput) {
             while (instructionPointer < opcodes.size()) {
                 int literalOperand = opcodes.get(instructionPointer + 1);
                 long combinedOperand = getCombinedOperand(opcodes.get(instructionPointer + 1));
@@ -50,6 +76,9 @@ public class Puzzle33{
                         if (registerA != 0) {
                             instructionPointer = literalOperand;
                             skipIncrement = true;
+                            if (earlyStop && !outputMatches(expectedOutput)) {
+                                return;
+                            }
                         }
                     }
                     case 4 -> registerB = registerB ^ registerC;
@@ -67,6 +96,18 @@ public class Puzzle33{
                     instructionPointer += 2;
                 }
             }
+        }
+
+        boolean outputMatches(List<Integer> expectedOutput) {
+            if (output.size() > expectedOutput.size()) {
+                return false;
+            }
+            for (int i = 0; i < output.size(); i++) {
+                if (!output.get(i).equals(expectedOutput.get(i))) {
+                    return false;
+                }
+            }
+            return true;
         }
 
         long getCombinedOperand(int value) {
@@ -100,5 +141,6 @@ public class Puzzle33{
         }
         instructions = Collections.unmodifiableList(instructionsList);
         System.out.println(part1());
+        System.out.println(part2());
     }
 }
