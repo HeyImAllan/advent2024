@@ -64,6 +64,58 @@ public class DijkstraPqueue {
 
         }
 
+        public static List<Integer> getShortestPath(int source_node, int target_node, int node_count, List<List<NodeDist>> graph) {
+            Long INF = (long) 999999999;
+            List<Long> dist = new ArrayList<>(Collections.nCopies(node_count, INF));
+            List<Integer> prev = new ArrayList<>(Collections.nCopies(node_count, -1));
+
+            dist.set(source_node, (long) 0);
+
+            Comparator<NodeDist> NodeDistComparator = (obj1, obj2) -> {
+                if (obj1.dist < obj2.dist)
+                    return 1;
+                if (obj1.dist > obj2.dist)
+                    return -1;
+                return 0;
+            };
+
+            PriorityQueue<NodeDist> pq = new PriorityQueue<>(NodeDistComparator);
+            pq.add(new NodeDist(source_node, 0));
+
+            while (!pq.isEmpty()) {
+                NodeDist obj = pq.peek();
+                pq.remove();
+
+                int current_source = obj.node;
+
+                for (NodeDist obj_node_dist : graph.get(current_source)) {
+                    int adj_node = obj_node_dist.node;
+                    long length_to_adjnode = obj_node_dist.dist;
+
+                    if (dist.get(adj_node) > length_to_adjnode + dist.get(current_source)) {
+                        if (dist.get(adj_node) != INF) {
+                            pq.remove(new NodeDist(adj_node, dist.get(adj_node)));
+                        }
+                        dist.set(adj_node, length_to_adjnode + dist.get(current_source));
+                        prev.set(adj_node, current_source);
+                        pq.add(new NodeDist(adj_node, dist.get(adj_node)));
+                    }
+                }
+            }
+
+            List<Integer> path = new ArrayList<>();
+            for (int at = target_node; at != -1; at = prev.get(at)) {
+                path.add(at);
+            }
+            Collections.reverse(path);
+
+            if (path.get(0) == source_node) {
+                return path;
+            } else {
+                return new ArrayList<>(); // return empty list if no path found
+            }
+        }
+
         public static final Map<Integer, List<List<Integer>>> ShortestPaths(int source_node, int node_count, List<List<NodeDist>> graph) {
 
         Long INF = (long) 999999999;

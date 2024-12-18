@@ -83,6 +83,7 @@ public class Puzzle36 {
     }
 
     public static void main(String[] args) {
+        long startTime = System.currentTimeMillis();
         List<String> input = readFromFile("src/main/resources/puzzle35/input.txt");
         List<Point> points = new ArrayList<>();
         for (int i =0; i < fallingBytes; i++) {
@@ -106,10 +107,12 @@ public class Puzzle36 {
         nodes.add(0, start);
         nodes.add(end);
         List<List<NodeDist>> graph = createGraphFromPointsList(nodes, map );
-        //System.out.println(graph);
-        Map<Integer, Integer> result = DijkstraPqueue.ShortestPath(0, nodes.size(), graph);
-        System.out.println("answer 1: " + result.get(nodes.size()-1));
+//        //System.out.println(graph);
+//        Map<Integer, Integer> result = DijkstraPqueue.ShortestPath(0, nodes.size(), graph);
+//        System.out.println("answer 1: " + result.get(nodes.size()-1));
 
+//        List<Integer> shortestPath = DijkstraPqueue.getShortestPath(0, nodes.indexOf(end), nodes.size(), graph);
+//        System.out.println(shortestPath);
         // get all other falling bytes.
         List<Point> additionalPoints = new ArrayList<>();
         for (int i = fallingBytes; i < input.size(); i++) {
@@ -118,7 +121,10 @@ public class Puzzle36 {
                 int col = Integer.parseInt(line.split(",")[0]);
                 additionalPoints.add(new Point(row, col));
             }
+
+
         long INF = 999999999;
+
         for (Point p : additionalPoints) {
             points.add(p);
             Map<Point, String> newMap = buildmap(points, mapHeight, mapWidth);
@@ -131,13 +137,13 @@ public class Puzzle36 {
             //System.out.println(graph);
             Map<Integer, Integer> tempResult = DijkstraPqueue.ShortestPath(0, tempNodes.size(), tempGraph);
             if (tempResult.get(tempNodes.size()-1) == INF) {
-                System.out.println("additional point: " + p);
-                System.out.println("answer 2: " + tempResult.get(tempNodes.size() - 1));
+                System.out.println("additional point: " + p.y + "," +p.x);
                 break;
             }
-
-
         }
+        long endTime   = System.currentTimeMillis();
+        long totalTime = endTime - startTime;
+        System.out.println("Total runtime: " + totalTime + "ms");
 
     }
     public static List<Point> getAllPoints(Map<Point, String> map) {
