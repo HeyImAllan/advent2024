@@ -2,7 +2,7 @@ package org.advent2024.day16;
 
 import java.util.*;
 
-class DijkstraPqueue {
+public class DijkstraPqueue {
 
         public static Map<Integer, Integer> ShortestPath(int source_node, int node_count, List<List<NodeDist>> graph) {
 

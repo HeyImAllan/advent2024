@@ -293,7 +293,7 @@ public class Puzzle32 {
     }
     return points;
 }
-    private static boolean isCorner(Point point) {
+    public static boolean isCorner(Point point) {
         List<Point> neighborsOfPoint = getNeighbors(point);
         List<Point> corridors = new ArrayList<>();
         int score = 0;
