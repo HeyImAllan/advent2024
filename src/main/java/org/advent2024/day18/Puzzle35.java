@@ -12,9 +12,9 @@ import static org.advent2024.day6.Puzzle12.readFromFile;
 
 public class Puzzle35 {
 
-    static int mapHeight = 7;
-    static int mapWidth = 7;
-    static int fallingBytes = 12;
+    static int mapHeight = 71;
+    static int mapWidth = 71;
+    static int fallingBytes = 1024;
     static LinkedList<Point> seenNodes = null;
 
     private static Map<Point, String> buildmap(List<Point> points, int mapHeight, int mapWidth) {
