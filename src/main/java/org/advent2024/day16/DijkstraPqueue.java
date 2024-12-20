@@ -242,7 +242,8 @@ public class DijkstraPqueue {
                 continue;
             }
             int nodeIndex = pointToIndex.get(node);
-            List<Point> validNeighborsForPoint = getNeighbors(node,map);
+            List<Point> validNeighborsForPoint = getNeighborsFromMap(node,map);
+            //List<Point> validNeighborsForPoint = getNeighborsFromPointsList(node, nodes);
             for (Point neighbor : validNeighborsForPoint) {
                 int adjIndex = pointToIndex.get(neighbor);
                 graph.get(nodeIndex).add(new NodeDist(adjIndex, 1));
@@ -251,7 +252,7 @@ public class DijkstraPqueue {
 
         return graph;
     }
-    private static List<Point> getNeighbors(Point node, Map<Point, String> map) {
+    private static List<Point> getNeighborsFromMap(Point node, Map<Point, String> map) {
         List<Point> tests = List.of(
                 new Point(node.x - 1, node.y),
                 new Point(node.x + 1, node.y),
@@ -259,10 +260,29 @@ public class DijkstraPqueue {
                 new Point(node.x, node.y + 1));
         List<Point> neighbors = new ArrayList<>();
         for (Point test : tests) {
-            if (map.containsKey(test) && (map.get(test).equals(".") || map.get(test).equals("E"))) {
+            String value = map.get(test);
+            if (value != null && (value.equals(".") || value.equals("E"))) {
                 neighbors.add(test);
             }
         }
         return neighbors;
+    }
+    private static List<Point> getNeighborsFromPointsList(Point node, List<Point> points) {
+        List<Point> tests = List.of(
+                new Point(node.x - 1, node.y),
+                new Point(node.x + 1, node.y),
+                new Point(node.x, node.y - 1),
+                new Point(node.x, node.y + 1));
+        List<Point> neighbors = new ArrayList<>();
+        for (Point test : tests) {
+            if (points.contains(test)) {
+                neighbors.add(test);
+            }
+        }
+        return neighbors;
+    }
+
+    public static int manhattanDist(Point p1, Point p2) {
+        return Math.abs(p1.x - p2.x) + Math.abs(p1.y - p2.y);
     }
 }
