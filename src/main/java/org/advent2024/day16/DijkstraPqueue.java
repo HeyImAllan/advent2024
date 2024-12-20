@@ -1,6 +1,8 @@
 package org.advent2024.day16;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 public class DijkstraPqueue {
 
@@ -223,5 +225,44 @@ public class DijkstraPqueue {
         System.out.println();
         source_node = 5;
         d.ShortestPath(source_node, node_count, graph);
+    }
+    public static List<List<NodeDist>> createGraphFromPointsList(List<Point> nodes, Map<Point, String> map) {
+        Map<Point, Integer> pointToIndex = new HashMap<>();
+        for (int i = 0; i < nodes.size(); i++) {
+            pointToIndex.put(nodes.get(i), i);
+        }
+
+        List<List<NodeDist>> graph = new ArrayList<>(nodes.size());
+        for (int i = 0; i < nodes.size(); i++) {
+            graph.add(new ArrayList<>());
+        }
+
+        for (Point node : nodes) {
+            if (node.equals(nodes.getLast())) {
+                continue;
+            }
+            int nodeIndex = pointToIndex.get(node);
+            List<Point> validNeighborsForPoint = getNeighbors(node,map);
+            for (Point neighbor : validNeighborsForPoint) {
+                int adjIndex = pointToIndex.get(neighbor);
+                graph.get(nodeIndex).add(new NodeDist(adjIndex, 1));
+            }
+        }
+
+        return graph;
+    }
+    private static List<Point> getNeighbors(Point node, Map<Point, String> map) {
+        List<Point> tests = List.of(
+                new Point(node.x - 1, node.y),
+                new Point(node.x + 1, node.y),
+                new Point(node.x, node.y - 1),
+                new Point(node.x, node.y + 1));
+        List<Point> neighbors = new ArrayList<>();
+        for (Point test : tests) {
+            if (map.containsKey(test) && (map.get(test).equals(".") || map.get(test).equals("E"))) {
+                neighbors.add(test);
+            }
+        }
+        return neighbors;
     }
 }

@@ -31,7 +31,7 @@ public class Puzzle35 {
         }
         return map;
     }
-    private static List<List<NodeDist>> createGraphFromPointsList(List<Point> nodes, Map<Point, String> map) {
+    public static List<List<NodeDist>> createGraphFromPointsList(List<Point> nodes, Map<Point, String> map) {
         Map<Point, Integer> pointToIndex = new HashMap<>();
         for (int i = 0; i < nodes.size(); i++) {
             pointToIndex.put(nodes.get(i), i);
@@ -65,14 +65,14 @@ public class Puzzle35 {
                 new Point(node.x, node.y + 1));
         List<Point> neighbors = new ArrayList<>();
         for (Point test : tests) {
-            if (map.containsKey(test) && map.get(test).equals(".")) {
+            if (map.containsKey(test) && (map.get(test).equals(".") || map.get(test).equals("E"))) {
                 neighbors.add(test);
             }
         }
         return neighbors;
     }
 
-    private static void printMap(Map<Point, String> map) {
+    public static void printMap(Map<Point, String> map) {
         for (int i = 0; i < mapHeight; i++) {
             for (int j = 0; j < mapWidth; j++) {
                 Point point = new Point(i, j);
