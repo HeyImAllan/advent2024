@@ -104,5 +104,8 @@ public class day20 {
 
             }
         System.out.println("answer part2: " + answerp2);
+        long endTime = System.currentTimeMillis();
+        long totalTime = endTime - startTime;
+        System.out.println("Total runtime: " + totalTime + "ms");
     }
 }
