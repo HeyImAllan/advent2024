@@ -1,5 +1,8 @@
 package org.advent2024.day16;
 
+import org.advent2024.util.DijkstraPqueue;
+import org.advent2024.util.NodeDist;
+
 import java.awt.*;
 import java.util.List;
 import java.util.*;

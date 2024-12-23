@@ -1,15 +1,15 @@
 package org.advent2024.day20;
 
-import org.advent2024.day16.DijkstraPqueue;
-import org.advent2024.day16.NodeDist;
+import org.advent2024.util.DijkstraPqueue;
+import org.advent2024.util.NodeDist;
 
 import java.awt.*;
 import java.util.*;
 import java.util.List;
 
-import static org.advent2024.day16.DijkstraPqueue.createGraphFromPointsList;
+import static org.advent2024.util.DijkstraPqueue.createGraphFromPointsList;
 
-import static org.advent2024.day16.DijkstraPqueue.manhattanDist;
+import static org.advent2024.util.DijkstraPqueue.manhattanDist;
 import static org.advent2024.day6.Puzzle12.readFromFile;
 import static org.advent2024.util.MapTools.*;
 
@@ -70,13 +70,7 @@ public class day20 {
         long startTime = System.currentTimeMillis();
         List<String> input = readFromFile("src/main/resources/day20/input.txt");
         Map<Point, String> map = buildmap(input);
-        int mapHeight = input.size();
-        int mapWidth = input.get(0).length();
-        printMap(map, mapHeight, mapWidth);
         List<Point> nodes = getAllPoints(map, ".");
-        List<Point> walls = getAllPoints(map, "#");
-        System.out.println(nodes);
-        System.out.println(walls);
         Point start = getfirstcoordinateof("S", map);
         Point end = getfirstcoordinateof("E", map);
         nodes.remove(start);

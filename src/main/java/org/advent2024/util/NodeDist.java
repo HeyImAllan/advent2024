@@ -1,4 +1,4 @@
-package org.advent2024.day16;
+package org.advent2024.util;
 public class NodeDist {
 
     int node; // Adjacent node
