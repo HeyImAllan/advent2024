@@ -1,13 +1,14 @@
 package org.advent2024.day23;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.advent2024.day6.Puzzle12.readFromFile;
 
 public class day23 {
     public static void main(String[] args) {
         System.out.println("day23");
-        List<String> input = readFromFile("src/main/resources/day23/example.txt");
+        List<String> input = readFromFile("src/main/resources/day23/input.txt");
         Map<String, List<String>> networks = new HashMap<>();
         for (String line : input) {
             String[] parts = line.split("-");
@@ -16,13 +17,11 @@ public class day23 {
             networks.computeIfAbsent(computer, k -> new ArrayList<>()).add(otherComputer);
             networks.computeIfAbsent(otherComputer, k -> new ArrayList<>()).add(computer);
         }
-        System.out.println(networks);
         Set<Set<String>> groups = findGroupsOf3withT(networks);
-        System.out.println(groups.size());
-
-//        List<String> sortedComputers = new ArrayList<>(networks.keySet());
-//        Collections.sort(sortedComputers);
-//        System.out.println(String.join(",", sortedComputers));
+        System.out.println("part 1: " + groups.size());
+        Set<Set<String>> allGroups = findGroups(networks);
+        Set<String> largest = allGroups.stream().max(Comparator.comparingInt(Set::size)).orElseThrow();
+        System.out.println("part 2: " + largest.stream().sorted().collect(Collectors.joining(",")));
     }
 
     public static Set<Set<String>> findGroupsOf3withT(Map<String, List<String>> networks) {
@@ -42,6 +41,33 @@ public class day23 {
         }
         return groups;
     }
+
+    private static Set<Set<String>> findGroups(Map<String, List<String>> network) {
+        Set<Set<String>> groups = new HashSet<>();
+        for (String startComputer : network.keySet()) {
+            Set<String> visitedNodes = new HashSet<>();
+            Set<String> currentGroup = new HashSet<>();
+            Queue<String> queue = new ArrayDeque<>();
+            queue.add(startComputer);
+            while (!queue.isEmpty()) {
+                String currentComputer = queue.poll();
+                if (!visitedNodes.contains(currentComputer) && new HashSet<>(network.get(currentComputer)).containsAll(currentGroup)) {
+                    currentGroup.add(currentComputer);
+                    visitedNodes.add(currentComputer);
+                    for (String otherComputer : network.get(currentComputer)) {
+                        if (!visitedNodes.contains(otherComputer)) {
+                            queue.add(otherComputer);
+                        }
+                    }
+                }
+            }
+            groups.add(currentGroup);
+        }
+        return groups;
+    }
+
+
+
 
 
 
